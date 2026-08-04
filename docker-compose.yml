@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  contest-agent:
+    build: .
+    container_name: contest-agent
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_FROM_NUMBER=${TWILIO_FROM_NUMBER}
+      - PHONE_NUMBER=${PHONE_NUMBER}
+      - TZ=Asia/Kolkata
+    volumes:
+      # Mount config.json so you can edit it without rebuilding
+      - ./config.json:/app/config.json:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/status', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
