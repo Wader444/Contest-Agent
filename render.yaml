@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: contest-agent-dashboard
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python main.py --mode web --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: AUTO_START
+        value: "true"
+      - key: TZ
+        value: Asia/Kolkata
+      - key: PHONE_NUMBER
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM_NUMBER
+        sync: false

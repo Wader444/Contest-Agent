@@ -214,11 +214,21 @@ def run_now():
     t.start()
     return jsonify({"success": True, "message": "Manual run triggered in background"})
 
+import os
+
 @app.route("/status")
+@app.route("/api/status")
 def status():
     return jsonify(agent.status())
 
+@app.route("/api/run-now")
+def api_run_now():
+    return run_now()
+
 def run_dashboard(host="0.0.0.0", port=5000):
     """Run the Flask dashboard"""
+    if os.getenv("AUTO_START", "true").lower() == "true":
+        print("⏰ Auto-starting background scheduler...")
+        agent.start()
     print(f"🌐 Dashboard starting at http://{host}:{port}")
     app.run(host=host, port=port, debug=False, use_reloader=False)

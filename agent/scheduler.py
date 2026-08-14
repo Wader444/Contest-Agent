@@ -1,5 +1,4 @@
 """Contest Agent Scheduler & Core Logic"""
-import json
 import threading
 from datetime import datetime, timedelta
 from typing import List, Dict
@@ -11,11 +10,11 @@ from .fetchers import (
     HackerRankFetcher, GeeksForGeeksFetcher
 )
 from .notifier import SMSNotifier
+from .config_loader import load_config
 
 class ContestAgent:
     def __init__(self, config_path: str = "config.json"):
-        with open(config_path, "r") as f:
-            self.config = json.load(f)
+        self.config = load_config(config_path)
 
         self.scheduler = BackgroundScheduler(timezone=self.config.get("timezone", "UTC"))
         self.running = False
