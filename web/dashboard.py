@@ -1,4 +1,5 @@
 """Flask Web Dashboard for Contest Agent Control"""
+import os
 from flask import Flask, jsonify, render_template_string
 from agent.scheduler import ContestAgent
 
@@ -95,6 +96,7 @@ HTML_TEMPLATE = """
         .btn-start { background: linear-gradient(135deg, #00d26a, #00a854); color: #fff; }
         .btn-stop { background: linear-gradient(135deg, #ff4757, #e84118); color: #fff; }
         .btn-run { background: linear-gradient(135deg, #3742fa, #2f3542); color: #fff; grid-column: span 2; }
+        .btn-daily { background: linear-gradient(135deg, #e67e22, #d35400); color: #fff; grid-column: span 2; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .footer {
             text-align: center;
@@ -157,7 +159,10 @@ HTML_TEMPLATE = """
                 ⏹️ Stop
             </button>
             <button class="btn btn-run" onclick="action('/run-now')">
-                🚀 Run Now
+                🚀 Run Weekly Digest Now
+            </button>
+            <button class="btn btn-daily" onclick="action('/run-daily')">
+                🌅 Send Today's Daily Alert
             </button>
         </div>
 
@@ -214,7 +219,23 @@ def run_now():
     t.start()
     return jsonify({"success": True, "message": "Manual run triggered in background"})
 
-import os
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "healthy",
+        "running": agent.running,
+        "phone": agent.config.get("phone_number")
+    })
+
+@app.route("/run-daily")
+@app.route("/api/run-daily")
+def run_daily():
+    # Run in background thread so request doesn't hang
+    import threading
+    t = threading.Thread(target=agent.send_daily_alert)
+    t.daemon = True
+    t.start()
+    return jsonify({"success": True, "message": "Daily alert triggered in background"})
 
 @app.route("/status")
 @app.route("/api/status")

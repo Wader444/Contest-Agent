@@ -8,6 +8,7 @@ Usage:
     python main.py --mode cli run        # Manual run
 """
 import sys
+import os
 import argparse
 
 if sys.platform == "win32":
@@ -43,8 +44,8 @@ Examples:
     parser.add_argument(
         "--port", 
         type=int, 
-        default=5000, 
-        help="Web dashboard port (default: 5000)"
+        default=int(os.environ.get("PORT", 5000)), 
+        help="Web dashboard port (default: 5000 or $PORT)"
     )
 
     args, unknown = parser.parse_known_args()

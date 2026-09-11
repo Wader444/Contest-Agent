@@ -3,6 +3,7 @@ services:
     name: contest-agent-dashboard
     runtime: python
     plan: free
+    healthCheckPath: /health
     buildCommand: "pip install -r requirements.txt"
     startCommand: "python main.py --mode web --port $PORT"
     envVars:

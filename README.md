@@ -212,6 +212,25 @@ RUN pip install -r requirements.txt
 CMD ["python", "cli.py", "start"]
 ```
 
+### Option D: Render Cloud Deployment (Free Tier)
+Deploy as a Web Service on [Render](https://render.com) in 2 minutes:
+
+1. Push your repository to GitHub:
+   ```bash
+   git push origin master
+   ```
+2. In [Render Dashboard](https://dashboard.render.com), click **New +** -> **Blueprint** (or **Web Service**).
+3. Connect your GitHub repository.
+4. Render automatically detects [`render.yaml`](file:///c:/Users/ycher/Desktop/contest-agent/coding-contest-agent/render.yaml).
+5. Set your secret Environment Variables:
+   - `TWILIO_ACCOUNT_SID`
+   - `TWILIO_AUTH_TOKEN`
+   - `TWILIO_FROM_NUMBER`
+   - `PHONE_NUMBER`
+6. Click **Apply** or **Deploy Web Service**.
+7. *(Optional)* To prevent Render's free tier from sleeping after 15 minutes of inactivity, set up a free 10-minute ping to `https://<your-service>.onrender.com/health` via [cron-job.org](https://cron-job.org) or [UptimeRobot](https://uptimerobot.com).
+
+
 ---
 
 ## 🛡️ Security Notes
