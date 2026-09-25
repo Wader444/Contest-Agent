@@ -29,8 +29,9 @@ def start():
         click.echo("❌ Agent is already running!")
         return
 
+    s = agent.status()
     click.echo("✅ Agent started! Press Ctrl+C to stop.")
-    click.echo(f"📱 Notifications will be sent to: {agent.config['phone_number']}")
+    click.echo(f"📡 Channel: {s['channel'].upper()} -> {s['target']}")
     click.echo("⏰ Scheduled: Sundays 10:00 AM | Wednesdays 6:00 AM | Daily 8:00 AM alert")
 
     try:
@@ -62,6 +63,20 @@ def run_daily():
     click.echo("🌅 Triggering daily morning alert...")
     agent.send_daily_alert()
 
+@cli.command(name="test-notify")
+def test_notify():
+    """Send a test notification to verify Telegram / SMS setup"""
+    click.echo("🔔 Sending test notification...")
+    test_msg = (
+        "🎯 <b>Contest Agent Notification Test</b>\n\n"
+        "If you are seeing this, your notification channel is working perfectly! 🚀"
+    )
+    success = agent.notifier.send(test_msg)
+    if success:
+        click.echo("✅ Notification sent successfully!")
+    else:
+        click.echo("❌ Failed to send notification. Please check your credentials.")
+
 @cli.command()
 def status():
     """Show current agent status"""
@@ -70,7 +85,8 @@ def status():
     click.echo("🎯 CONTEST AGENT STATUS")
     click.echo("=" * 40)
     click.echo(f"Status:      {'🟢 RUNNING' if s['running'] else '🔴 STOPPED'}")
-    click.echo(f"Phone:       {s['phone']}")
+    click.echo(f"Channel:     {s['channel'].upper()}")
+    click.echo(f"Target:      {s['target']}")
     click.echo(f"Platforms:   {', '.join(s['platforms_enabled'])}")
     click.echo(f"Last Run:    {s['last_run'] or 'Never'}")
     click.echo(f"Next Run:    {s['next_run'] or 'N/A'}")

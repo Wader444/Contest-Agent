@@ -10,12 +10,13 @@
 
 ## ✨ Features
 
-- 📱 **SMS Notifications** — Get contest alerts on your phone via Twilio
+- 💬 **Free Telegram Bot** — 100% free, unlimited notifications directly to your phone (Recommended)
+- 📱 **SMS Notifications** — Optional SMS notifications via Twilio
 - 🌐 **5 Platforms** — LeetCode, CodeForces, CodeChef, HackerRank, GeeksForGeeks
-- ⏰ **Smart Scheduling** — Auto-digests every **Sunday 10 AM** & **Wednesday 6 AM**
+- ⏰ **Smart Scheduling** — Auto-digests every **Sunday 10 AM** & **Wednesday 6 AM** + Daily 8 AM alert
 - 🎛️ **Web Dashboard** — Beautiful control panel to start/stop/run the agent
-- 💻 **CLI Control** — Full command-line interface for power users
-- 🔧 **Flexible Config** — Enable/disable platforms, customize schedule, phone number
+- 💻 **CLI Control** — Full command-line interface with test commands
+- 🔧 **Flexible Config** — Enable/disable platforms, customize schedule, channel selection
 
 ---
 
@@ -29,25 +30,23 @@ cd coding-contest-agent
 pip install -r requirements.txt
 ```
 
-### 2. Configure Twilio (Required for SMS)
+### 2. Configure Notifications
 
-1. Sign up at [twilio.com/try-twilio](https://www.twilio.com/try-twilio) (free trial)
-2. Get your **Account SID** & **Auth Token** from the [console](https://console.twilio.com/)
-3. Get a **Twilio Phone Number**
-4. Edit `config.json`:
+#### Option A: Telegram Bot (100% Free & Recommended)
+1. In Telegram, message **`@BotFather`** and send `/newbot` to create your bot and receive your **Bot Token**.
+2. Message **`@userinfobot`** in Telegram to get your numerical **Chat ID**.
+3. Tap **Start** on your new bot to give it permission to message you.
+4. Add your credentials to `.env` or `config.json`:
+   ```bash
+   NOTIFICATION_CHANNEL=telegram
+   TELEGRAM_BOT_TOKEN="your_bot_token_here"
+   TELEGRAM_CHAT_ID="your_chat_id_here"
+   ```
 
-```json
-{
-  "phone_number": "+919030240952",
-  "twilio": {
-    "account_sid": "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    "auth_token": "your_auth_token_here",
-    "from_number": "+1234567890"
-  }
-}
-```
-
-> ⚠️ **Trial Account**: Free Twilio accounts can only SMS to **verified numbers**. Verify your number in the Twilio console first.
+#### Option B: Twilio SMS (Paid / Trial)
+1. Sign up at [twilio.com](https://www.twilio.com/)
+2. Get your **Account SID**, **Auth Token**, and **Twilio Phone Number**
+3. Configure `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_FROM_NUMBER` in `.env` or `config.json`
 
 ### 3. Run the Agent
 

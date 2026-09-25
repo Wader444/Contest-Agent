@@ -9,7 +9,7 @@ from .fetchers import (
     LeetCodeFetcher, CodeForcesFetcher, CodeChefFetcher,
     HackerRankFetcher, GeeksForGeeksFetcher
 )
-from .notifier import SMSNotifier
+from .notifier import get_notifier
 from .config_loader import load_config
 
 class ContestAgent:
@@ -34,14 +34,8 @@ class ContestAgent:
         if platforms.get("geeksforgeeks", True):
             self.fetchers.append(GeeksForGeeksFetcher())
 
-        # Initialize notifier
-        twilio_cfg = self.config["twilio"]
-        self.notifier = SMSNotifier(
-            account_sid=twilio_cfg["account_sid"],
-            auth_token=twilio_cfg["auth_token"],
-            from_number=twilio_cfg["from_number"],
-            to_number=self.config["phone_number"]
-        )
+        # Initialize notifier via factory (supports Telegram, Twilio, or both)
+        self.notifier = get_notifier(self.config)
 
         self.last_contests: List[Dict] = []
         self.last_run: datetime = None
@@ -152,11 +146,21 @@ class ContestAgent:
 
     def status(self) -> Dict:
         """Get current agent status"""
+        channel = self.config.get("notification_channel", "telegram")
+        if channel == "telegram":
+            target = f"Telegram (Chat ID: {self.config.get('telegram', {}).get('chat_id') or 'Not Set'})"
+        elif channel in ("twilio", "sms"):
+            target = f"Twilio SMS ({self.config.get('phone_number')})"
+        else:
+            target = f"Both (Telegram + SMS {self.config.get('phone_number')})"
+
         return {
             "running": self.running,
             "last_run": self.last_run.isoformat() if self.last_run else None,
             "total_contests_cached": len(self.last_contests),
             "platforms_enabled": [f.name for f in self.fetchers],
+            "channel": channel,
+            "target": target,
             "phone": self.config["phone_number"],
             "next_run": self._get_next_run_time()
         }
