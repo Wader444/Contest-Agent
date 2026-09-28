@@ -29,7 +29,8 @@ class SMSNotifier:
         filtered = []
         for c in contests:
             delta = c["start_time"] - now
-            if 0 <= delta.days <= look_ahead_days:
+            total_hours = delta.total_seconds() / 3600
+            if 0 < total_hours <= look_ahead_days * 24:
                 filtered.append(c)
 
         if not filtered:
@@ -135,7 +136,8 @@ class TelegramNotifier:
         filtered = []
         for c in contests:
             delta = c["start_time"] - now
-            if 0 <= delta.days <= look_ahead_days:
+            total_hours = delta.total_seconds() / 3600
+            if 0 < total_hours <= look_ahead_days * 24:
                 filtered.append(c)
 
         if not filtered:

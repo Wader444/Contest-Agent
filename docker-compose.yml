@@ -8,10 +8,14 @@ services:
     ports:
       - "5000:5000"
     environment:
+      - NOTIFICATION_CHANNEL=telegram
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
       - TWILIO_FROM_NUMBER=${TWILIO_FROM_NUMBER}
       - PHONE_NUMBER=${PHONE_NUMBER}
+      - AUTO_START=true
       - TZ=Asia/Kolkata
     volumes:
       # Mount config.json so you can edit it without rebuilding

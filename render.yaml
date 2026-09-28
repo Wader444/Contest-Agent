@@ -13,6 +13,12 @@ services:
         value: "true"
       - key: TZ
         value: Asia/Kolkata
+      - key: NOTIFICATION_CHANNEL
+        value: telegram
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
       - key: PHONE_NUMBER
         sync: false
       - key: TWILIO_ACCOUNT_SID
